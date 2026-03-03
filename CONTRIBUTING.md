@@ -1,4 +1,4 @@
-# Contributing to GoTUIApp
+# Contributing to hostr
 
 Thank you for your interest in contributing! We welcome bug fixes, improvements, and new ideas.
 

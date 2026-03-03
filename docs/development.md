@@ -31,7 +31,7 @@
 
    import (
        tea "github.com/charmbracelet/bubbletea"
-       "github.com/your-username/GoTUIApp/internal/ui/mycommand"
+       "github.com/marko-stanojevic/hostr/internal/ui/mycommand"
    )
 
    func main() {
