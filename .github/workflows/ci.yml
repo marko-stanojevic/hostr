@@ -47,7 +47,7 @@ jobs:
       checks: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Run golangci-lint
         uses: ./.github/actions/go-lint
@@ -63,7 +63,7 @@ jobs:
       checks: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Run Go Tests
         uses: ./.github/actions/go-test
@@ -78,7 +78,7 @@ jobs:
       release-version: ${{ steps.build.outputs.release-version }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
