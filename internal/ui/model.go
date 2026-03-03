@@ -2,6 +2,7 @@
 package ui
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"time"
@@ -13,47 +14,7 @@ import (
 	"github.com/marko-stanojevic/hostr/internal/sysinfo"
 )
 
-// ──────────────────────────────────────────────
-// Styles
-// ──────────────────────────────────────────────
-
-var (
-	titleStyle = lipgloss.NewStyle().
-			Bold(true).
-			Foreground(lipgloss.Color("205")).
-			MarginBottom(1)
-
-	headerStyle = lipgloss.NewStyle().
-			Bold(true).
-			Foreground(lipgloss.Color("39"))
-
-	labelStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("244")).
-			Width(16)
-
-	valueStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("255"))
-
-	barFilledStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("205"))
-
-	barEmptyStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("237"))
-
-	footerStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("240")).
-			MarginTop(1)
-
-	errorStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("196")).
-			Bold(true)
-
-	boxStyle = lipgloss.NewStyle().
-			Border(lipgloss.RoundedBorder()).
-			BorderForeground(lipgloss.Color("62")).
-			Padding(0, 1).
-			MarginBottom(1)
-)
+// Styles are defined in styles.go
 
 // ──────────────────────────────────────────────
 // Messages
@@ -69,12 +30,13 @@ type errMsg error
 
 // Model is the root Bubble Tea model for the sysinfo TUI.
 type Model struct {
-	info    sysinfo.Info
-	spinner spinner.Model
-	loading bool
-	err     error
-	width   int
-	height  int
+	collector sysinfo.Collector
+	info      sysinfo.Info
+	spinner   spinner.Model
+	loading   bool
+	err       error
+	width     int
+	height    int
 }
 
 // NewModel constructs a Model with sensible defaults.
@@ -84,8 +46,9 @@ func NewModel() Model {
 	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 
 	return Model{
-		spinner: s,
-		loading: true,
+		collector: sysinfo.NewCollector(),
+		spinner:   s,
+		loading:   true,
 	}
 }
 
@@ -97,7 +60,7 @@ func NewModel() Model {
 func (m Model) Init() tea.Cmd {
 	return tea.Batch(
 		m.spinner.Tick,
-		collectCmd(),
+		m.collectCmd(),
 	)
 }
 
@@ -115,7 +78,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "r":
 			m.loading = true
-			return m, tea.Batch(m.spinner.Tick, collectCmd())
+			return m, tea.Batch(m.spinner.Tick, m.collectCmd())
 		}
 
 	case tea.WindowSizeMsg:
@@ -125,14 +88,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case infoMsg:
 		m.info = sysinfo.Info(msg)
 		m.loading = false
+		m.err = nil // Clear previous errors on success
 		return m, tickCmd()
 
 	case errMsg:
+		// Retain previous data and log error, don't blank the display
 		m.err = msg
 		m.loading = false
 
 	case tickMsg:
-		return m, collectCmd()
+		return m, m.collectCmd()
 
 	case spinner.TickMsg:
 		var cmd tea.Cmd
@@ -232,10 +197,11 @@ func progressBar(percent float64, width int) string {
 // Commands
 // ──────────────────────────────────────────────
 
-// collectCmd runs sysinfo.Collect off the main goroutine.
-func collectCmd() tea.Cmd {
+// collectCmd runs metric collection off the main goroutine.
+// It uses the model's configured collector (allowing testing/mocking).
+func (m Model) collectCmd() tea.Cmd {
 	return func() tea.Msg {
-		info, err := sysinfo.Collect()
+		info, err := m.collector.Collect(context.Background())
 		if err != nil {
 			return errMsg(err)
 		}
