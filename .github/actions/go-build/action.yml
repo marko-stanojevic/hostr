@@ -10,7 +10,7 @@ inputs:
 outputs:
   release-version:
     description: The resolved semantic version
-    value: ${{ steps.version.outputs.version }}
+    value: ${{ steps.version.outputs.semVer }}
 
 runs:
   using: composite
@@ -21,13 +21,24 @@ runs:
         go-version-file: go.mod
         cache: true
 
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v3.0.0
+      with:
+        versionSpec: '6.0.x'
+
     - name: Resolve version
       id: version
+      uses: gittools/actions/gitversion/execute@v3.0.0
+      with:
+        useConfigFile: true
+        configFilePath: gitversion.yml
+
+    - name: Display GitVersion outputs
       shell: bash
       run: |
-        VERSION=$(git describe --tags --always --dirty 2>/dev/null || echo "0.0.0-dev")
-        echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-        echo "Resolved version: ${VERSION}"
+        echo "SemVer: ${{ steps.version.outputs.semVer }}"
+        echo "FullSemVer: ${{ steps.version.outputs.fullSemVer }}"
+        echo "InformationalVersion: ${{ steps.version.outputs.informationalVersion }}"
 
     - name: Build (debug)
       if: inputs.release-type == 'debug'
@@ -39,7 +50,7 @@ runs:
       if: inputs.release-type == 'release'
       shell: bash
       env:
-        VERSION: ${{ steps.version.outputs.version }}
+        VERSION: ${{ steps.version.outputs.semVer }}
       run: |
         set -e
         mkdir -p dist

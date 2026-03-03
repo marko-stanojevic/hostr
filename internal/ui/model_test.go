@@ -4,7 +4,8 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/your-username/GoTUIApp/internal/ui"
+
+	"github.com/marko-stanojevic/hostr/internal/ui"
 )
 
 func TestNewModel_InitialState(t *testing.T) {

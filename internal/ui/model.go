@@ -9,7 +9,8 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/your-username/GoTUIApp/internal/sysinfo"
+
+	"github.com/marko-stanojevic/hostr/internal/sysinfo"
 )
 
 // ──────────────────────────────────────────────
@@ -68,12 +69,12 @@ type errMsg error
 
 // Model is the root Bubble Tea model for the sysinfo TUI.
 type Model struct {
-	info      sysinfo.Info
-	spinner   spinner.Model
-	loading   bool
-	err       error
-	width     int
-	height    int
+	info    sysinfo.Info
+	spinner spinner.Model
+	loading bool
+	err     error
+	width   int
+	height  int
 }
 
 // NewModel constructs a Model with sensible defaults.

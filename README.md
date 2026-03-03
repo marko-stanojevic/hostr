@@ -2,9 +2,9 @@
 
 > A production-ready Go TUI application template with CI/CD, cross-platform builds, semantic versioning, and an example `sysinfo` command
 
-[![CI](https://github.com/your-username/GoTUIApp/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/GoTUIApp/actions/workflows/ci.yml)
-[![Go Version](https://img.shields.io/github/go-mod/go-version/your-username/GoTUIApp)](go.mod)
-[![License](https://img.shields.io/github/license/your-username/GoTUIApp)](LICENSE)
+[![CI](https://github.com/marko-stanojevic/hostr/actions/workflows/ci.yml/badge.svg)](https://github.com/marko-stanojevic/hostr/actions/workflows/ci.yml)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/marko-stanojevic/hostr)](go.mod)
+[![License](https://img.shields.io/github/license/marko-stanojevic/hostr)](LICENSE)
 
 ---
 
@@ -147,7 +147,7 @@ GoTUIApp/
 See the **[Getting Started Guide](docs/getting-started.md)** for full setup instructions.
 
 ```bash
-git clone https://github.com/your-username/GoTUIApp.git
+git clone https://github.com/marko-stanojevic/hostr.git
 cd GoTUIApp
 go mod download
 go run ./cmd/sysinfo
