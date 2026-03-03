@@ -44,7 +44,8 @@ runs:
       if: inputs.release-type == 'debug'
       shell: bash
       run: |
-        go build -v ./cmd/sysinfo/...
+        mkdir -p dist/debug
+        go build -v -o dist/debug/sysinfo ./cmd/sysinfo/...
 
     - name: Cross-compile (release)
       if: inputs.release-type == 'release'
