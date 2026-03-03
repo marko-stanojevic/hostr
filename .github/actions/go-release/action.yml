@@ -15,11 +15,24 @@ runs:
         go-version-file: go.mod
         cache: true
 
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v3.0.0
+      with:
+        versionSpec: '6.0.x'
+
+    - name: Resolve version
+      id: version
+      uses: gittools/actions/gitversion/execute@v3.0.0
+      with:
+        useConfigFile: true
+        configFilePath: gitversion.yml
+
     - name: Run GoReleaser
       uses: goreleaser/goreleaser-action@v6
       with:
         distribution: goreleaser
         version: latest
-        args: release --clean
+        args: release --clean --skip=validate
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
+        GORELEASER_CURRENT_TAG: v${{ steps.version.outputs.semVer }}
