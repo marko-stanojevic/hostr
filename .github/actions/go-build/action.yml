@@ -1,0 +1,65 @@
+name: Go Build
+description: Cross-compile Go binaries for all target platforms
+
+inputs:
+  release-type:
+    description: "Build type: 'debug' or 'release'"
+    required: false
+    default: 'debug'
+
+outputs:
+  release-version:
+    description: The resolved semantic version
+    value: ${{ steps.version.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+        cache: true
+
+    - name: Resolve version
+      id: version
+      shell: bash
+      run: |
+        VERSION=$(git describe --tags --always --dirty 2>/dev/null || echo "0.0.0-dev")
+        echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+        echo "Resolved version: ${VERSION}"
+
+    - name: Build (debug)
+      if: inputs.release-type == 'debug'
+      shell: bash
+      run: |
+        go build -v ./cmd/sysinfo/...
+
+    - name: Cross-compile (release)
+      if: inputs.release-type == 'release'
+      shell: bash
+      env:
+        VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        set -e
+        mkdir -p dist
+        platforms=("linux/amd64" "linux/arm64" "darwin/amd64" "darwin/arm64" "windows/amd64")
+        for platform in "${platforms[@]}"; do
+          GOOS="${platform%%/*}"
+          GOARCH="${platform##*/}"
+          output="dist/sysinfo-${VERSION}-${GOOS}-${GOARCH}"
+          [[ "$GOOS" == "windows" ]] && output="${output}.exe"
+          echo "Building ${output}…"
+          GOOS=$GOOS GOARCH=$GOARCH go build \
+            -ldflags="-s -w -X main.version=${VERSION}" \
+            -o "${output}" \
+            ./cmd/sysinfo/...
+        done
+
+    - name: Upload artifacts
+      if: inputs.release-type == 'release'
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist
+        path: dist/
+        retention-days: 30

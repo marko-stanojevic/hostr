@@ -1,0 +1,17 @@
+dependencies:
+  - go.mod
+  - go.sum
+
+ci-cd:
+  - .github/**/*
+
+docs:
+  - docs/**/*
+  - "**/*.md"
+
+tests:
+  - "**/*_test.go"
+
+build:
+  - .goreleaser.yml
+  - .golangci.yml

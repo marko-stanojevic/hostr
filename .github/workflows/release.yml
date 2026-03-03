@@ -1,0 +1,25 @@
+name: Release
+run-name: "${{ github.event.repository.name }} | Release | ${{ github.run_id }}"
+permissions: read-all
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Release binaries
+        uses: ./.github/actions/go-release
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

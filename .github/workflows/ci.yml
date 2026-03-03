@@ -1,0 +1,77 @@
+name: CI
+run-name: "${{ github.event.repository.name }} | CI | ${{ github.run_id }} | ${{ github.event_name }}"
+permissions: read-all
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'go.mod'
+      - 'go.sum'
+
+  pull_request:
+    branches:
+      - main
+      - 'release/**'
+      - 'hotfix/**'
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - '.github/**/*'
+      - 'go.mod'
+      - 'go.sum'
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run golangci-lint
+        uses: ./.github/actions/go-lint
+
+  test:
+    name: Unit Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Go Tests
+        uses: ./.github/actions/go-test
+
+  build:
+    name: Build
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      release-version: ${{ steps.build.outputs.release-version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build binaries
+        id: build
+        uses: ./.github/actions/go-build
+        with:
+          release-type: 'debug'
