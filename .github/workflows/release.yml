@@ -3,6 +3,7 @@ run-name: "${{ github.event.repository.name }} | Release | ${{ github.run_id }}"
 permissions: read-all
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*.*.*'
