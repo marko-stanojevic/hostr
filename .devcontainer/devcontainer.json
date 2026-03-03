@@ -1,15 +1,7 @@
 {
-    "name": "Go-GoTUIApp",
-    "image": "mcr.microsoft.com/devcontainers/go:1-1.22-bookworm",
-
-    "features": {
-        "ghcr.io/devcontainers/features/common-utils:2": {
-            "upgradePackages": "true",
-            "username": "vscode"
-        },
-        "ghcr.io/devcontainers/features/github-cli:1": {
-            "version": "latest"
-        }
+    "name": "go-hostr",
+    "build": {
+        "dockerfile": "Dockerfile"
     },
 
     "customizations": {
@@ -17,8 +9,9 @@
             "settings": {
                 "go.toolsManagement.checkForUpdates": "local",
                 "go.useLanguageServer": true,
+                "go.gopath": "/go",
                 "go.lintTool": "golangci-lint",
-                "go.lintFlags": ["--fast"],
+                "go.lintFlags": [ "--fast" ],
                 "go.formatTool": "goimports",
                 "editor.formatOnSave": true,
                 "editor.defaultFormatter": "golang.go",
@@ -27,7 +20,8 @@
                         "source.organizeImports": "explicit"
                     }
                 },
-                "terminal.integrated.defaultProfile.linux": "bash"
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "extensions.ignoreRecommendations": true
             },
             "extensions": [
                 "golang.go",
@@ -36,22 +30,25 @@
                 "github.vscode-github-actions"
             ],
             "remote.extensionKind": {
-                "github.copilot": ["ui"],
-                "github.copilot-chat": ["ui"]
+                "github.copilot": [ "ui" ],
+                "github.copilot-chat": [ "ui" ],
+                "github.vscode-github-actions": [ "ui" ]
             }
         }
     },
 
     "onCreateCommand": "go mod download",
-    "postStartCommand": "go build ./...",
+    "postStartCommand": "go mod download && go build ./...",
     "postAttachCommand": "echo 'Dev container ready.'",
 
-    "waitFor": "postAttachCommand",
+    "waitFor": "postStartCommand",
 
     "mounts": [
-        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached,readonly",
         "source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/gh,target=/home/vscode/.config/gh,type=bind,consistency=cached"
     ],
 
-    "remoteUser": "vscode"
+    "remoteUser": "vscode",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/workspace"
 }

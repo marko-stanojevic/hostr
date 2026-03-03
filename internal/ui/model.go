@@ -9,7 +9,7 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/your-username/GoTUIApp/internal/sysinfo"
+	"github.com/marko-stanojevic/hostr/internal/sysinfo"
 )
 
 // ──────────────────────────────────────────────

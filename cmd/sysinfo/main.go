@@ -6,12 +6,12 @@ import (
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/your-username/GoTUIApp/internal/ui"
+	"github.com/marko-stanojevic/hostr/internal/ui"
 )
 
 func main() {
-	p := tea.NewProgram(
-		ui.NewModel(),
+	m := ui.NewModel()
+	p := tea.NewProgram(m,
 		tea.WithAltScreen(),
 		tea.WithMouseCellMotion(),
 	)

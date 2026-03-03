@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/your-username/GoTUIApp/internal/sysinfo"
+	"github.com/marko-stanojevic/hostr/internal/sysinfo"
 )
 
 func TestCollect_ReturnsInfo(t *testing.T) {
