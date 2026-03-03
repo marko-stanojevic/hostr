@@ -1,21 +1,39 @@
 # Path-based labels
 dependencies:
-  - go.mod
-  - go.sum
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'go.mod'
+      - 'go.sum'
 
 ci-cd:
-  - .github/**/*
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/actions/*'
+      - '.github/workflows/*'
 
 docs:
-  - docs/**/*
-  - "**/*.md"
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/**/*'
+      - '**/*.md'
 
 tests:
-  - "**/*_test.go"
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*_test.go'
 
 build:
-  - .goreleaser.yml
-  - .golangci.yml
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.goreleaser.yml'
+      - '.golangci.yml'
+
+commands:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'cmd/**/*'
+      - 'internal/**/*'
+      - 'main.go'
 
 # Branch-based labels
 breaking:
