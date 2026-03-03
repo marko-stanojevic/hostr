@@ -1,6 +1,6 @@
 version: 2
 
-project_name: gotui-app
+project_name: hostr
 
 before:
   hooks:
