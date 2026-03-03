@@ -1,6 +1,6 @@
-# GoTUIApp — Go TUI Command App Template
+# ⬡ hostr — Live System Information TUI
 
-> A production-ready Go TUI application template with CI/CD, cross-platform builds, semantic versioning, and an example `sysinfo` command
+> A hobby terminal UI application demonstrating the power of TUIs for viewing real-time system metrics, built with Go and Bubble Tea
 
 [![CI](https://github.com/marko-stanojevic/hostr/actions/workflows/ci.yml/badge.svg)](https://github.com/marko-stanojevic/hostr/actions/workflows/ci.yml)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/marko-stanojevic/hostr)](go.mod)
@@ -8,36 +8,56 @@
 
 ---
 
-## 💡 Why This Template?
+## 💡 About hostr
 
-Most Go TUI projects start with a single `main.go`. CI, linting, and cross-compilation get bolted on later — inconsistently, if ever. This template flips that model.
+hostr is a hobby project created to demonstrate the power and elegance of terminal user interfaces. It's a fast, interactive system information viewer built with Go and Bubble Tea.
 
-**GoTUIApp is opinionated by design.**  
-It gives you a production-grade foundation so you can focus on building your TUI — not wiring pipelines.
-
-### What makes it different?
-
-- **CI/CD from day one** — lint, test (3 OSes), and cross-compile automatically on every PR
-- **Bubble Tea architecture** — clean separation between data, model, and view
-- **Cross-platform releases** — GoReleaser builds binaries for Linux, macOS, and Windows (amd64 + arm64)
-- **Example included** — the `sysinfo` command shows real-world usage: live system metrics with auto-refresh
-- **AI-agent ready** — `AGENTS.md` and `.github/copilot-instructions.md` guide AI assistants on project conventions
+**Why a TUI?**  
+TUIs are lightweight, responsive, and work anywhere you have a terminal. No browser. No resource overhead. This project showcases how modern TUI frameworks make it easy to build beautiful, functional terminal applications.
 
 ---
 
-## 🎬 How to Use This Template
+## 🚀 Installation
 
-1. Click **"Use this template"** on GitHub
-2. Clone your new repository
-3. Replace `github.com/your-username/GoTUIApp` in `go.mod` and all Go files with your module path
-4. Run `go run ./cmd/sysinfo` to verify everything works
-5. Start building your own commands in `cmd/` and `internal/`
+### Pre-built Binaries
 
----
+Download the latest release for your platform from [GitHub Releases](https://github.com/marko-stanojevic/hostr/releases).
 
-## 🖥️ sysinfo — Example TUI Command
+```bash
+# macOS (Apple Silicon)
+curl -L https://github.com/marko-stanojevic/hostr/releases/download/v1.0.0/hostr_darwin_arm64.tar.gz | tar xz
+./sysinfo
 
-The included `sysinfo` command demonstrates a full Bubble Tea application displaying live system information:
+# Linux (x86_64)
+curl -L https://github.com/marko-stanojevic/hostr/releases/download/v1.0.0/hostr_linux_amd64.tar.gz | tar xz
+./sysinfo
+
+# Windows (PowerShell)
+$url = "https://github.com/marko-stanojevic/hostr/releases/download/v1.0.0/hostr_windows_amd64.zip"
+Invoke-WebRequest -Uri $url -OutFile hostr.zip
+Expand-Archive hostr.zip
+.\sysinfo.exe
+```
+
+### From Source
+
+Requires **Go 1.22+**.
+
+```bash
+git clone https://github.com/marko-stanojevic/hostr.git
+cd hostr
+go run ./cmd/sysinfo
+```
+
+## 🖥️ Using hostr
+
+Launch the app with:
+
+```bash
+go run ./cmd/sysinfo
+```
+
+The TUI displays live system metrics organized by category:
 
 ```
 ⬡  System Info
@@ -66,71 +86,59 @@ The included `sysinfo` command demonstrates a full Bubble Tea application displa
 Updated 14:22:07  •  r refresh  •  q quit
 ```
 
-Stats refresh automatically every 3 seconds. Press `r` to refresh immediately or `q` to quit.
-
-```bash
-go run ./cmd/sysinfo
-```
+**Keyboard Shortcuts:**
+- `r` — refresh metrics now
+- `q` — quit
 
 ---
 
-## 📦 Features
+## ✨ Features
 
-### ✅ CI/CD Ready
+- **Live System Metrics** — CPU, memory, disk, hostname, OS, uptime, Go version
+- **Auto-refresh** — updates every 3 seconds with manual refresh option
+- **Cross-platform** — Linux, macOS, and Windows (no dependencies)
+- **Fast & Lightweight** — Go binary, minimal resource usage
+- **Modern TUI Demo** — showcases Bubble Tea framework capabilities with real-world use case
 
-- GitHub Actions workflows: lint → test (Linux, macOS, Windows) → cross-compile
-- Automated GitHub Releases via GoReleaser on version tags
-- Composite actions for reusable pipeline steps
+### Tech Stack
 
-### ✅ Development Environment
-
-- VS Code settings, launch configs, and recommended extensions
-- Devcontainer with Go pre-installed
-- Makefile-style VS Code tasks for build, test, lint, and run
-
-### ✅ Code Quality
-
-- `golangci-lint` with a curated ruleset (`.golangci.yml`)
-- Race detector enabled in all test runs
-- Dependabot for automated Go module and GitHub Actions updates
-
-### ✅ Release Automation
-
-- GoReleaser cross-compiles for 5 platform/arch combinations
-- Archives (`.tar.gz` / `.zip`), checksums, and changelog generated automatically
-- Tag `v1.2.3` → release is live within minutes
-
-### ✅ AI-Agent Ready
-
-- `AGENTS.md` — coding conventions and error-handling patterns for AI assistants
-- `.github/copilot-instructions.md` — project-specific guidance for Copilot
+- [Bubble Tea](https://github.com/charmbracelet/bubbletea) — TUI framework
+- [Bubbles](https://github.com/charmbracelet/bubbles) — spinner and other UI components
+- [Lipgloss](https://github.com/charmbracelet/lipgloss) — terminal styling
+- [gopsutil](https://github.com/shirou/gopsutil) — system metric collection
+- [GoReleaser](https://goreleaser.com/) — cross-platform binary builds
+- [GitHub Actions](https://github.com/features/actions) — CI/CD automation
 
 ---
 
 ## 📂 Project Structure
 
 ```
-GoTUIApp/
+hostr/
 ├── cmd/
 │   └── sysinfo/
 │       └── main.go              // Entry point
 ├── internal/
+│   ├── cmd/
+│   │   └── registry.go          // Command registry (extensible architecture)
 │   ├── sysinfo/
-│   │   ├── sysinfo.go           // System metric collection
+│   │   ├── collector.go         // Collector interface for abstraction
+│   │   ├── sysinfo.go           // Metric collection via gopsutil
 │   │   └── sysinfo_test.go
 │   └── ui/
 │       ├── model.go             // Bubble Tea model, update, view
-│       └── model_test.go
+│       ├── model_test.go
+│       └── styles.go            // Centralized style definitions
 ├── docs/
 │   ├── getting-started.md
 │   ├── development.md
-│   └── ci-cd.md
+│   ├── ci-cd.md
+│   └── architecture.md
 ├── .devcontainer/
 │   └── devcontainer.json
 ├── .github/
-│   ├── actions/                 // Composite actions
+│   ├── actions/                 // Composite actions (go-lint, go-test, go-build, go-release)
 │   ├── workflows/               // CI & release pipelines
-│   ├── ISSUE_TEMPLATE/
 │   └── copilot-instructions.md
 ├── .vscode/                     // Editor settings & tasks
 ├── .goreleaser.yml
@@ -142,24 +150,14 @@ GoTUIApp/
 
 ---
 
-## 🚀 Getting Started
+## 📖 Documentation
 
-See the **[Getting Started Guide](docs/getting-started.md)** for full setup instructions.
+For developers:
 
-```bash
-git clone https://github.com/marko-stanojevic/hostr.git
-cd GoTUIApp
-go mod download
-go run ./cmd/sysinfo
-```
-
----
-
-## 📘 Documentation
-
-- 🚀 [Getting Started](docs/getting-started.md)
-- 🛠️ [Development Guide](docs/development.md)
-- 🔄 [CI/CD & Release Guide](docs/ci-cd.md)
+- 🚀 [Getting Started](docs/getting-started.md) — setup and local development
+- 🛠️ [Development Guide](docs/development.md) — project structure, conventions, testing
+- 🔄 [CI/CD & Release Guide](docs/ci-cd.md) — GitHub Actions, versioning, releases
+- 🏗️ [Architecture](docs/architecture.md) — design patterns and extensibility
 
 ---
 
@@ -169,4 +167,10 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ---
 
-Built with ❤️ using [Bubble Tea](https://github.com/charmbracelet/bubbletea) by Charm
+## 📄 License
+
+This project is licensed under the MIT License — see [LICENSE](LICENSE) for details.
+
+---
+
+Built with ❤️ using [Bubble Tea](https://github.com/charmbracelet/bubbletea) by Charm.

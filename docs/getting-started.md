@@ -14,9 +14,9 @@ Optional:
 ## Quick Start
 
 ```bash
-# 1. Clone your new repository
-git clone https://github.com/your-username/GoTUIApp.git
-cd GoTUIApp
+# 1. Clone the repository
+git clone https://github.com/marko-stanojevic/hostr.git
+cd hostr
 
 # 2. Download dependencies
 go mod download
@@ -41,7 +41,7 @@ golangci-lint run ./...
 ## Project Layout
 
 ```
-GoTUIApp/
+hostr/
 ├── cmd/
 │   └── sysinfo/main.go       # Entry point for the sysinfo command
 ├── internal/
@@ -63,4 +63,4 @@ GoTUIApp/
 
 - Read the [Development Guide](development.md) for adding new commands and metrics
 - Read the [CI/CD Guide](ci-cd.md) for release and versioning workflows
-- Rename the module path in `go.mod` and all imports to match your own GitHub username/org
+- Read the [Architecture Guide](architecture.md) for design patterns and extensibility

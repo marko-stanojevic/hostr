@@ -1,6 +1,6 @@
 # GitHub Copilot Instructions
 
-This repository is a Go TUI application template built with [Bubble Tea](https://github.com/charmbracelet/bubbletea).
+This repository is hostr, a hobby Go TUI application demonstrating system information display with [Bubble Tea](https://github.com/charmbracelet/bubbletea).
 
 ## Stack
 
